@@ -1,0 +1,420 @@
+/* === GLOBAL === */
+body {
+  margin: 0;
+  background: linear-gradient(to right, #eef2f3, #ffffff);
+  font-family: 'Segoe UI', sans-serif;
+  width: 100%;
+}
+
+/* === DASHBOARD === */
+.room-dashboard {
+  padding: 30px;
+  max-width: 100%;
+  font-family: sans-serif;
+}
+
+/* === HEADER === */
+h1 {
+  text-align: center;
+  color: #333;
+  font-size: 28px;
+  margin-bottom: 20px;
+  font-weight: 600;
+}
+
+/* === BOOKING FORM === */
+.booking-form {
+  margin: 0 auto 30px;
+  background: #f8f8f8;
+  padding: 20px;
+  border-radius: 10px;
+  max-width: 600px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+  border: 1px solid #ddd;
+}
+
+.booking-form input {
+  display: block;
+  margin: 8px 0;
+  padding: 10px;
+  width: 100%;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.booking-form button {
+  margin-top: 12px;
+  padding: 10px 16px;
+  background-color: #2563eb;
+  color: white;
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.booking-form button:hover {
+  background-color: #1e40af;
+}
+
+/* === TABLE === */
+.table-container {
+  border-radius: 10px;
+  overflow-x: auto;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
+}
+
+.header-row,
+.room-row {
+  display: flex;
+}
+
+/* .room-cell {
+  min-width: 60px;
+  font-weight: 600;
+  height: 20px;
+  padding: 12px;
+  text-align: center;
+  background-color: #004080;
+  color: #fff;
+  border-right: 1px solid #ccc;
+  border: 1px solid #ccc;
+  cursor: pointer;
+} */
+
+/* .day-cell {
+  min-width: 30px;
+  height: 28px;
+  text-align: center;
+  vertical-align: middle;
+  line-height: 50px;
+  border: 1px solid #ccc;
+  font-size: 13px;
+  position: relative;
+  background-color: #fff;
+  
+} */
+
+.day-cell:hover {
+  background-color: #e0f7fa;
+  cursor: pointer;
+}
+
+.day-header {
+  background-color: #f0f0f0;
+  color: #004080;
+  font-weight: bold;
+  font-size: 12px;
+  padding: 5px 0;
+  white-space: nowrap;
+}
+
+/* === STATUS === */
+.occupied {
+  background-color: #4CAF50;
+  color: white;
+  font-weight: bold;
+  border-radius: 6px;
+}
+
+.vacant {
+  background-color: #ffffff;
+  color: #ccc;
+}
+
+/* === COUNT === */
+.guest-count {
+  font-size: 10px;
+  color: #000;
+  /* position: absolute; */
+  bottom: 2px;
+  width: 100%;
+  text-align: center;
+}
+
+/* === INPUT FOCUS STYLING === */
+.input-style {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 14px;
+  width: 100%;
+  transition: all 0.2s ease;
+}
+
+.input-style:focus {
+  border-color: #2563eb;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
+}
+
+/* === RESPONSIVE === */
+@media (max-width: 768px) {
+  .room-cell {
+    min-width: 80px;
+    font-size: 12px;
+  }
+
+  .day-cell {
+    min-width: 60px;
+    font-size: 11px;
+  }
+
+  .booking-form {
+    padding: 16px;
+  }
+}
+/* Bron qilish formasi uchun overlay */
+.booking-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.4); /* orqa fon qorayadi */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999; /* Ekrandagi eng ustun qavat */
+}
+
+.booking-form {
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  width: 100%;
+  max-width: 500px;
+  z-index: 1000;
+  position: relative;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+}
+
+/* Xonadagi mehmonlar ro‘yxati (modal) */
+.guest-info-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.4); /* qora fon */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+.guest-info-content {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 100%;
+  max-width: 500px;
+  z-index: 1000;
+  position: relative;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+}
+.table-container {
+  overflow: auto;
+  max-height: 80vh;
+  border: 1px solid #ccc;
+}
+
+.header-row {
+  display: flex;
+  position: sticky;
+  top: 0;
+  background-color: white;
+  z-index: 2;
+}
+
+.room-row {
+  display: flex;
+}
+
+.room-cell {
+  min-width:55px;
+  height: 25px;
+  border: 1px solid #ccc;
+  padding: 8px;
+  position: sticky;
+  left: 0;
+  background-color: #004080;
+  z-index: 1;
+  color: #fff;
+  font-weight: bold;
+  border-right: 1px solid #ccc;
+  border: 1px solid #ccc;
+  cursor: pointer;
+}
+
+.day-cell {
+  min-width: 58px;
+  max-width: 50px;
+  border: 1px solid #ccc;
+  padding: 8px;
+  position: relative; 
+  text-align: center;
+  white-space: nowrap;
+  transition: background 0.3s ease;
+}
+
+.day-cell.kok {
+  background-color: #add8e6; /* lightblue */
+}
+.day-cell.sariq {
+  background-color: #ffeb3b; /* yellow */
+}
+.day-cell.sabzi {
+  background-color: #ff9800; /* orange */
+}
+.day-cell.qizil {
+  background-color: #f44336; /* red */
+}
+
+
+.day-header {
+  background-color: #f0f0f0;
+  font-weight: bold;
+}
+
+.occupied {
+  background-color: #ffdddd;
+}
+
+.vacant {
+  background-color: #ddffdd;
+}
+
+  /* .guest-count {
+    font-size: 12px;
+    font-weight: bold;
+  } */
+.available-rooms-display {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 90%;
+  max-width: 500px;
+  backdrop-filter: blur(15px);
+  background: rgba(255, 255, 255, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 20px;
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.2);
+  padding: 30px 35px;
+  z-index: 1000;
+  animation: slideDown 0.35s ease;
+  text-align: center;
+  font-family: 'Segoe UI', sans-serif;
+  color: #2c3e50;
+}
+
+.available-rooms-display h3 {
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 25px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.available-rooms-display button {
+  background: linear-gradient(to right, #ff5f6d, #ffc371);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 15px rgba(255, 94, 98, 0.3);
+}
+
+.available-rooms-display button:hover {
+  background: linear-gradient(to right, #ff4b5c, #ffb347);
+  transform: scale(1.05);
+}
+
+.available-rooms-display ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.available-rooms-display ul {
+  background-color: rgba(255, 255, 255, 0.6);
+  margin: 8px 0;
+  padding: 12px 18px;
+  border-radius: 12px;
+  font-weight: 500;
+  color: #2c3e50;
+  overflow-y: auto;
+  max-height: 300px;
+  transition: background-color 0.3s ease;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.available-rooms-display ul:hover {
+  background-color: rgba(236, 240, 241, 0.7);
+}
+
+.available-rooms-display p {
+  color: #e74c3c;
+  font-weight: 600;
+  margin-top: 12px;
+  font-size: 15px;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -60%);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%);
+  }
+}
+.rejected-warning {
+  position: sticky;
+  top: 0;
+  background-color: white;
+  z-index: 99;
+  padding: 10px;
+  text-align: center;
+}
+
+.rejected-btn {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  font-size: 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.qizil { background-color: #e74c3c; color: white; }
+.sabzi { background-color: #f39c12; color: white; }
+.sariq { background-color: #f1c40f; color: black; }
+.kok   { background-color: #3498db; color: white; }
+.vacant { background-color: #ecf0f1; }
+.guest-count { font-weight: bold; text-align: center; }
+
+
+.overflow-alert {
+  background-color: #ffe0e0;
+  color: #a80000;
+  padding: 10px;
+  margin: 10px 0;
+  border-left: 4px solid red;
+  border-radius: 5px;
+  font-weight: bold;
+}
