@@ -20,7 +20,7 @@ function Home() {
       return;
     }
     try {
-      const res = await axios.post('http://localhost:5000/api/rooms/availableStat', {
+      const res = await axios.post('https://mexback.onrender.com/api/rooms/availableStat', {
         checkIn,
         checkOut,
       });
@@ -38,13 +38,13 @@ function Home() {
 
     const fetchMonthlyStats = async () => {
       try {
-        const current = await axios.get(`http://localhost:5000/api/rooms/monthly-stats?year=${year}&month=${month}`);
+        const current = await axios.get(`https://mexback.onrender.com/api/rooms/monthly-stats?year=${year}&month=${month}`);
         setMonthlyStats(current.data);
 
         const prevMonth = month === 1 ? 12 : month - 1;
         const prevYear = month === 1 ? year - 1 : year;
 
-        const previous = await axios.get(`http://localhost:5000/api/rooms/monthly-stats?year=${prevYear}&month=${prevMonth}`);
+        const previous = await axios.get(`https://mexback.onrender.com/api/rooms/monthly-stats?year=${prevYear}&month=${prevMonth}`);
         setPrevStats(previous.data);
       } catch (err) {
         console.error('Monthly stats error:', err);
