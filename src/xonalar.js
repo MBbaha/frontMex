@@ -19,7 +19,7 @@ function RoomDashboard() {
 
   const fetchRooms = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/rooms/getRoom');
+      const response = await axios.get('https://mexback.onrender.com/api/rooms/getRoom');
       const sortedRooms = response.data.sort((a, b) => {
         const numA = parseInt(a.number.replace(/\D/g, ''), 10);
         const numB = parseInt(b.number.replace(/\D/g, ''), 10);
@@ -44,7 +44,7 @@ function RoomDashboard() {
     }
 
     try {
-      const res = await axios.post('http://localhost:5000/api/guests/register', {
+      const res = await axios.post('https://mexback.onrender.com/api/guests/register', {
         guestsCount,
         checkIn,
         checkOut,
@@ -65,7 +65,7 @@ function RoomDashboard() {
     }
 
     try {
-      const res = await axios.delete('http://localhost:5000/api/guests/deleteByDate', {
+      const res = await axios.delete('https://mexback.onrender.com/api/guests/deleteByDate', {
         data: { guestsCount, checkIn, checkOut },
       });
       setMessage(res.data.message || '✅ Bronlar bekor qilindi.');
@@ -183,5 +183,6 @@ function RoomDashboard() {
     </div>
   );
 }
+
 
 export default RoomDashboard;
