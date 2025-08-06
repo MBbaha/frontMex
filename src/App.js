@@ -102,7 +102,7 @@ function Home() {
         <div className="monthly-stat-box">
           <h3>📆 {monthlyStats.month}-oy statistikasi</h3>
           <p><strong>Jami xonalar:</strong> {monthlyStats.totalRooms}</p>
-          <p><strong>Jami sig‘im:208</strong> {monthlyStats.totalCapacity}</p>
+          <p><strong>Jami sig‘im:208</strong> </p>
           <p><strong>Band joylar:</strong> {monthlyStats.usedCount}</p>
           <p><strong>Bandlik foizi:</strong> {monthlyStats.occupancyRate}%</p>
           {diffRate !== null && (
