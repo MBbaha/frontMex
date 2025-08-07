@@ -8,6 +8,8 @@ function RoomDashboard() {
     guestsCount: '',
     checkIn: '',
     checkOut: '',
+     companyName:'',
+    phoneNumber:'',
   });
   const [message, setMessage] = useState('');
   const [selectedRoomGuests, setSelectedRoomGuests] = useState(null);
@@ -37,8 +39,10 @@ function RoomDashboard() {
   };
 
   const handleGenerate = async () => {
-    const { checkIn, checkOut, guestsCount } = formData;
-    if (!checkIn || !checkOut || guestsCount <= 0) {
+    const { checkIn, checkOut, guestsCount, companyName,
+       phoneNumber, } = formData;
+    if (!checkIn || !checkOut || !guestsCount||  !companyName ||
+       !phoneNumber <= 0) {
       alert('Iltimos, to‘g‘ri ma’lumotlarni kiriting.');
       return;
     }
@@ -48,6 +52,8 @@ function RoomDashboard() {
         guestsCount,
         checkIn,
         checkOut,
+       companyName,
+       phoneNumber,
       });
       setMessage(res.data.message || '✅ Bron qilish muvaffaqiyatli bajarildi.');
       fetchRooms();
@@ -107,6 +113,8 @@ function RoomDashboard() {
           <div className="booking-form">
             <h2>➕ Xonani bron qilish</h2>
             <input type="number" name="guestsCount" placeholder="Mehmonlar soni" value={formData.guestsCount} onChange={handleChange} required />
+            <input type="string" name=" companyName" placeholder="Tashkilot nomi " value={formData.companyName} onChange={handleChange} required />
+            <input type="number" name="phoneNumber," placeholder="Telefon raqami" value={formData.phoneNumber} onChange={handleChange} required />
             <input type="date" name="checkIn" value={formData.checkIn} onChange={handleChange} required />
             <input type="date" name="checkOut" value={formData.checkOut} onChange={handleChange} required />
             <button onClick={handleGenerate}>📌 Bron qilish</button>
@@ -186,3 +194,4 @@ function RoomDashboard() {
 
 
 export default RoomDashboard;
+
