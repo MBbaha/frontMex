@@ -12,7 +12,12 @@ function Home() {
   const [monthlyStats, setMonthlyStats] = useState(null);
   const [prevStats, setPrevStats] = useState(null);
 
+  // 🔍 QIDIRUV STATE
+  const [searchValue, setSearchValue] = useState('');
+  const [searchResults, setSearchResults] = useState([]);
+
   const handleCloseStats = () => setStats(null);
+  const handleCloseSearch = () => setSearchResults([]);
 
   const handleCheckAvailability = async () => {
     if (!checkIn || !checkOut) {
@@ -28,6 +33,22 @@ function Home() {
     } catch (err) {
       console.error(err);
       alert('Xatolik yuz berdi');
+    }
+  };
+
+  // 🔍 FIRMA/TELEFON/SANA ORQALI QIDIRISH
+  const handleSearch = async () => {
+    if (!searchValue.trim()) {
+      alert("Qidiruv maydoniga qiymat kiriting.");
+      return;
+    }
+
+    try {
+      const res = await axios.get(`https://mexback.onrender.com/api/rooms/search?query=${searchValue}`);
+      setSearchResults(res.data.rooms);
+    } catch (error) {
+      console.error("Qidiruvda xatolik:", error);
+      alert("Qidiruvda xatolik yuz berdi.");
     }
   };
 
@@ -71,6 +92,7 @@ function Home() {
         </button>
       </div>
 
+      {/* 📅 Statistika hisobi */}
       <div className="statistic-form">
         <h2>📊 Bo‘sh joylar statistikasi</h2>
         <div className="form-row">
@@ -81,6 +103,19 @@ function Home() {
         </div>
       </div>
 
+      {/* 🔍 QIDIRUV BO‘LIMI */}
+      <div className="search-box">
+        <h2>🔍 Qidiruv</h2>
+        <input
+          type="text"
+          placeholder="Firma nomi, telefon raqam yoki sana (08.08.2025)"
+          value={searchValue}
+          onChange={(e) => setSearchValue(e.target.value)}
+        />
+        <button onClick={handleSearch}>Qidirish</button>
+      </div>
+
+      {/* 📊 Statistikani ko‘rsatish */}
       {stats && (
         <div className="statistic-float-box">
           <h3>📊 Statistika</h3>
@@ -98,6 +133,31 @@ function Home() {
         </div>
       )}
 
+      {/* 🔍 QIDIRUV NATIJALARI */}
+      {searchResults.length > 0 && (
+        <div className="search-result-box">
+          <h3>🔍 Qidiruv natijalari</h3>
+          <button className="close-btn" onClick={handleCloseSearch}>✖ Yopish</button>
+          <ul>
+            {searchResults.map((room, idx) => (
+              <li key={idx}>
+                🛏 Xona raqami: <strong>{room.number}</strong> <br />
+                Sig‘imi: {room.capacity} <br />
+                Mehmonlar:{" "}
+                <ul>
+                  {room.guests.map((g, i) => (
+                    <li key={i}>
+                      👤 {g.name}, 📞 {g.phoneNumber}, 🏢 {g.companyName}, 🗓 {new Date(g.from).toLocaleDateString()} - {new Date(g.to).toLocaleDateString()}
+                    </li>
+                  ))}
+                </ul>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      {/* 🗓 Oylik Statistika */}
       {monthlyStats && (
         <div className="monthly-stat-box">
           <h3>📆 {monthlyStats.month}-oy statistikasi</h3>
