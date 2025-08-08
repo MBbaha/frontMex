@@ -37,20 +37,7 @@ function Home() {
   };
 
   // 🔍 FIRMA/TELEFON/SANA ORQALI QIDIRISH
-  const handleSearch = async () => {
-    if (!searchValue.trim()) {
-      alert("Qidiruv maydoniga qiymat kiriting.");
-      return;
-    }
-
-    try {
-      const res = await axios.get(`https://mexback.onrender.com/api/rooms/getBookedRooms`);
-      setSearchResults(res.data.rooms);
-    } catch (error) {
-      console.error("Qidiruvda xatolik:", error);
-      alert("Qidiruvda xatolik yuz berdi.");
-    }
-  };
+  
 
   useEffect(() => {
     const today = new Date();
