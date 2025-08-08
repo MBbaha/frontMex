@@ -17,6 +17,7 @@ function RoomDashboard() {
 
   useEffect(() => {
     fetchRooms();
+    div
   }, []);
 
   const fetchRooms = async () => {
@@ -225,3 +226,4 @@ function RoomDashboard() {
 }
 
 export default RoomDashboard;
+
