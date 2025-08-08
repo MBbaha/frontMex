@@ -44,7 +44,7 @@ function Home() {
     }
 
     try {
-      const res = await axios.get(`https://mexback.onrender.com/api/rooms/search?query=${searchValue}`);
+      const res = await axios.get(`https://mexback.onrender.com/api/rooms/getBookedRooms`);
       setSearchResults(res.data.rooms);
     } catch (error) {
       console.error("Qidiruvda xatolik:", error);
