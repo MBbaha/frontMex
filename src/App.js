@@ -91,16 +91,8 @@ function Home() {
       </div>
 
       {/* 🔍 QIDIRUV BO‘LIMI */}
-      <div className="search-box">
-        <h2>🔍 Qidiruv</h2>
-        <input
-          type="text"
-          placeholder="Firma nomi, telefon raqam yoki sana (08.08.2025)"
-          value={searchValue}
-          onChange={(e) => setSearchValue(e.target.value)}
-        />
-        <button onClick={handleSearch}>Qidirish</button>
-      </div>
+
+
 
       {/* 📊 Statistikani ko‘rsatish */}
       {stats && (
