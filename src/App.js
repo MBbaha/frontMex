@@ -122,7 +122,7 @@ function Home() {
           <button className="close-btn" onClick={handleCloseStats}>✖ Yopish</button>
           <p><strong>Bo‘sh xonalar:</strong> {stats.availableRooms}</p>
           <p><strong>Bo‘sh joylar:</strong> {stats.availableCapacity}</p>
-          <p><strong>Umumiy sig‘im:</strong> 208</p>
+          <p><strong>Umumiy sig‘im:</strong> 209</p>
           <p><strong>Bandlik foizi:</strong> {stats.occupancyRate}%</p>
           <h4>📃 Bo‘sh xonalar ro‘yxati:</h4>
           <ul>
@@ -162,7 +162,7 @@ function Home() {
         <div className="monthly-stat-box">
           <h3>📆 {monthlyStats.month}-oy statistikasi</h3>
           <p><strong>Jami xonalar:</strong> {monthlyStats.totalRooms}</p>
-          <p><strong>Jami sig‘im:208</strong> </p>
+          <p><strong>Jami sig‘im:209</strong> </p>
           <p><strong>Band joylar:</strong> {monthlyStats.usedCount}</p>
           <p><strong>Bandlik foizi:</strong> {monthlyStats.occupancyRate}%</p>
           {diffRate !== null && (
