@@ -65,7 +65,8 @@ function RoomDashboard() {
 
   const handleUnbook = async () => {
     const { checkIn, checkOut, guestsCount } = formData;
-    if (!checkIn || !checkOut || guestsCount <= 0) {
+    if (!checkIn || !checkOut || guestsCount ||  companyName
+    || phoneNumber <= 0) {
       alert('Iltimos, to‘g‘ri ma’lumotlarni kiriting.');
       return;
     }
@@ -195,6 +196,7 @@ function RoomDashboard() {
 
 
 export default RoomDashboard;
+
 
 
 
