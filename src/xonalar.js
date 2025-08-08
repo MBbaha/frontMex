@@ -113,8 +113,8 @@ function RoomDashboard() {
           <div className="booking-form">
             <h2>➕ Xonani bron qilish</h2>
             <input type="number" name="guestsCount" placeholder="Mehmonlar soni" value={formData.guestsCount} onChange={handleChange} required />
-            <input type="string" name=" companyName" placeholder="Tashkilot nomi " value={formData.companyName} onChange={handleChange} required />
-            <input type="number" name="phoneNumber," placeholder="Telefon raqami" value={formData.phoneNumber} onChange={handleChange} required />
+            <input type="text"  name=" companyName" placeholder="Tashkilot nomi " value={formData.companyName} onChange={handleChange} required />
+            <input type="text" name="phoneNumber," placeholder="Telefon raqami" value={formData.phoneNumber} onChange={handleChange} required />
             <input type="date" name="checkIn" value={formData.checkIn} onChange={handleChange} required />
             <input type="date" name="checkOut" value={formData.checkOut} onChange={handleChange} required />
             <button onClick={handleGenerate}>📌 Bron qilish</button>
@@ -194,4 +194,5 @@ function RoomDashboard() {
 
 
 export default RoomDashboard;
+
 
