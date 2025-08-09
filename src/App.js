@@ -11,10 +11,8 @@ function Home() {
   const [stats, setStats] = useState(null);
   const [monthlyStats, setMonthlyStats] = useState(null);
   const [prevStats, setPrevStats] = useState(null);
-  const [searchResults, setSearchResults] = useState([]);
 
   const handleCloseStats = () => setStats(null);
-  const handleCloseSearch = () => setSearchResults([]);
 
   const handleCheckAvailability = async () => {
     if (!checkIn || !checkOut) {
@@ -119,70 +117,70 @@ function Home() {
             ))}
           </ul>
 
-      {/* 🏢 Band xonalar ro‘yxati */}
-{stats.occupiedRooms && stats.occupiedRooms.length > 0 && (
-  <>
-    <h4>🏢 Band xonalar ro‘yxati (kompaniya bo‘yicha)</h4>
-    {Object.entries(
-      stats.occupiedRooms.reduce((acc, room) => {
-        if (!acc[room.companyName]) {
-          acc[room.companyName] = [];
-        }
-        acc[room.companyName].push(room);
-        return acc;
-      }, {})
-    ).map(([company, rooms], idx) => {
-      return (
-        <div key={idx} className="company-block">
-          <h5>
-            🏢 <strong>{company}</strong> tashkilotiga quyidagi xonalar berildi:
-          </h5>
-          <ul>
-            {rooms.map((room, rIdx) => (
-              <li key={rIdx}>
-                🛏 Xona {room.number} — Sig‘imi: {room.capacity}
-                <ul>
-                  {room.guests.map((g, gIdx) => (
-                    <li key={gIdx}>
-                      👤 {g.name}, 📞 {g.phoneNumber}
-                    </li>
-                  ))}
-                </ul>
-              </li>
-            ))}
-          </ul>
-        </div>
-      );
-    })}
-  </>
-)}
+          {/* 🏢 Band xonalar ro‘yxati */}
+          {stats.occupiedRooms && stats.occupiedRooms.length > 0 && (
+            <>
+              <h4>🏢 Band xonalar ro‘yxati (kompaniya bo‘yicha)</h4>
+              {Object.entries(
+                stats.occupiedRooms.reduce((acc, room) => {
+                  if (!acc[room.companyName]) {
+                    acc[room.companyName] = [];
+                  }
+                  acc[room.companyName].push(room);
+                  return acc;
+                }, {})
+              ).map(([company, rooms], idx) => {
+                return (
+                  <div key={idx} className="company-block">
+                    <h5>
+                      🏢 <strong>{company}</strong> tashkilotiga quyidagi xonalar berildi:
+                    </h5>
+                    <ul>
+                      {rooms.map((room, rIdx) => (
+                        <li key={rIdx}>
+                          🛏 Xona {room.number} — Sig‘imi: {room.capacity}
+                          <ul>
+                            {room.guests.map((g, gIdx) => (
+                              <li key={gIdx}>
+                                👤 {g.name}, 📞 {g.phoneNumber}
+                              </li>
+                            ))}
+                          </ul>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                );
+              })}
+            </>
+          )}
 
-
-
-      {/* 🗓 Oylik Statistika */}
-      {monthlyStats && (
-        <div className="monthly-stat-box">
-          <h3>📆 {monthlyStats.month}-oy statistikasi</h3>
-          <p>
-            <strong>Jami xonalar:</strong> {monthlyStats.totalRooms}
-          </p>
-          <p>
-            <strong>Jami sig‘im: 209</strong>
-          </p>
-          <p>
-            <strong>Band joylar:</strong> {monthlyStats.usedCount}
-          </p>
-          <p>
-            <strong>Bandlik foizi:</strong> {monthlyStats.occupancyRate}%
-          </p>
-          {diffRate !== null && (
-            <p>
-              📉 Oldingi oydan farq:{' '}
-              <strong style={{ color: diffRate >= 0 ? 'green' : 'red' }}>
-                {diffRate > 0 ? '+' : ''}
-                {diffRate}%
-              </strong>
-            </p>
+          {/* 🗓 Oylik Statistika */}
+          {monthlyStats && (
+            <div className="monthly-stat-box">
+              <h3>📆 {monthlyStats.month}-oy statistikasi</h3>
+              <p>
+                <strong>Jami xonalar:</strong> {monthlyStats.totalRooms}
+              </p>
+              <p>
+                <strong>Jami sig‘im: 209</strong>
+              </p>
+              <p>
+                <strong>Band joylar:</strong> {monthlyStats.usedCount}
+              </p>
+              <p>
+                <strong>Bandlik foizi:</strong> {monthlyStats.occupancyRate}%
+              </p>
+              {diffRate !== null && (
+                <p>
+                  📉 Oldingi oydan farq:{' '}
+                  <strong style={{ color: diffRate >= 0 ? 'green' : 'red' }}>
+                    {diffRate > 0 ? '+' : ''}
+                    {diffRate}%
+                  </strong>
+                </p>
+              )}
+            </div>
           )}
         </div>
       )}
