@@ -107,41 +107,41 @@ function Home() {
             <strong>Bandlik foizi:</strong> {stats.occupancyRate}%
           </p>
 
-       {/* 🏢 Band xonalar ro‘yxati */}
-{stats.occupiedRooms && stats.occupiedRooms.length > 0 && (
-  <>
+     {/* 📊 Band xonalar ro‘yxati */}
+{stats?.occupiedRooms?.length > 0 && (
+  <div className="occupied-rooms">
     <h4>🏢 Band xonalar ro‘yxati (kompaniya bo‘yicha)</h4>
+
     {Object.entries(
       stats.occupiedRooms.reduce((acc, room) => {
-        if (!acc[room.companyName]) {
-          acc[room.companyName] = [];
-        }
+        if (!acc[room.companyName]) acc[room.companyName] = [];
         acc[room.companyName].push(room);
         return acc;
       }, {})
     ).map(([company, rooms], idx) => {
+      // Jami odamlar soni
+      const totalGuests = rooms.reduce(
+        (sum, room) => sum + (room.guests?.length || 0),
+        0
+      );
+
       return (
         <div key={idx} className="company-block">
           <h5>
-            🏢 <strong>{company}</strong> tashkilotiga quyidagi xonalar berildi:
+            🏢 <strong>{company}</strong>
           </h5>
-
-          {/* Umumiy odam sonini hisoblash */}
-          <p>
-            👥 <strong>Jami joylashtirilgan odamlar:</strong>{" "}
-            {rooms.reduce((sum, room) => sum + (room.guests?.length || 0), 0)} kishi
-          </p>
+          <p>👥 <strong>Jami joylashtirilgan odamlar:</strong> {totalGuests} kishi</p>
 
           <ul>
             {rooms.map((room, rIdx) => (
               <li key={rIdx}>
                 🛏 Xona {room.number} — Sig‘imi: {room.capacity} — Band:{" "}
                 {room.guests?.length || 0} kishi
-                {room.guests && room.guests.length > 0 && (
+                {room.guests?.length > 0 && (
                   <ul>
                     {room.guests.map((g, gIdx) => (
                       <li key={gIdx}>
-                        👤 {g.name}, 📞 {g.phoneNumber}
+                        👤 {g.name} {g.phoneNumber && `📞 ${g.phoneNumber}`}
                       </li>
                     ))}
                   </ul>
@@ -152,8 +152,9 @@ function Home() {
         </div>
       );
     })}
-  </>
+  </div>
 )}
+
 
 
 
