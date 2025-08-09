@@ -22,13 +22,18 @@ function Home() {
       return;
     }
     try {
-      const res = await axios.post("https://mexback.onrender.com/api/rooms/getRoomAvailability ", {
-        checkIn,
-        checkOut,
-      });
+      const res = await axios.post(
+        "https://mexback.onrender.com/api/rooms/getRoomAvailability",
+        {
+          checkIn,
+          checkOut,
+        }
+      );
+
+      console.log("API javobi:", res.data); // Debug uchun
       setStats(res.data);
     } catch (err) {
-      console.error(err);
+      console.error("Xatolik:", err);
       alert("Xatolik yuz berdi");
     }
   };
@@ -82,9 +87,17 @@ function Home() {
       <div className="statistic-form">
         <h2>📊 Bo‘sh joylar statistikasi</h2>
         <div className="form-row">
-          <input type="date" value={checkIn} onChange={(e) => setCheckIn(e.target.value)} />
+          <input
+            type="date"
+            value={checkIn}
+            onChange={(e) => setCheckIn(e.target.value)}
+          />
           <span>⟶</span>
-          <input type="date" value={checkOut} onChange={(e) => setCheckOut(e.target.value)} />
+          <input
+            type="date"
+            value={checkOut}
+            onChange={(e) => setCheckOut(e.target.value)}
+          />
           <button onClick={handleCheckAvailability}>Hisoblash</button>
         </div>
       </div>
@@ -96,17 +109,31 @@ function Home() {
           <button className="close-btn" onClick={handleCloseStats}>
             ✖ Yopish
           </button>
-          <p><strong>Bo‘sh xonalar:</strong> {stats.availableRooms}</p>
-          <p><strong>Bo‘sh joylar:</strong> {stats.availableCapacity}</p>
-          <p><strong>Umumiy sig‘im:</strong> 209</p>
-          <p><strong>Bandlik foizi:</strong> {stats.occupancyRate}%</p>
+          <p>
+            <strong>Bo‘sh xonalar:</strong> {stats.availableRooms}
+          </p>
+          <p>
+            <strong>Bo‘sh joylar:</strong> {stats.availableCapacity}
+          </p>
+          <p>
+            <strong>Umumiy sig‘im:</strong> 209
+          </p>
+          <p>
+            <strong>Bandlik foizi:</strong> {stats.occupancyRate}%
+          </p>
 
           <h4>📃 Bo‘sh xonalar ro‘yxati:</h4>
-          <ul>
-            {stats.details.map((room, idx) => (
-              <li key={idx}>🛏 {room.number}: {room.free} joy bo‘sh</li>
-            ))}
-          </ul>
+          {stats?.details?.length > 0 ? (
+            <ul>
+              {stats.details.map((room, idx) => (
+                <li key={idx}>
+                  🛏 {room.number}: {room.free} joy bo‘sh
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p>Bo‘sh xona topilmadi</p>
+          )}
         </div>
       )}
 
@@ -114,7 +141,9 @@ function Home() {
       {searchResults.length > 0 && (
         <div className="search-result-box">
           <h3>🔍 Qidiruv natijalari</h3>
-          <button className="close-btn" onClick={handleCloseSearch}>✖ Yopish</button>
+          <button className="close-btn" onClick={handleCloseSearch}>
+            ✖ Yopish
+          </button>
           <ul>
             {searchResults.map((room, idx) => (
               <li key={idx}>
@@ -124,7 +153,9 @@ function Home() {
                   {room.guests.map((g, i) => (
                     <li key={i}>
                       👤 {g.name}, 📞 {g.phoneNumber}, 🏢 {g.companyName},
-                      🗓 {new Date(g.from).toLocaleDateString()} - {new Date(g.to).toLocaleDateString()}
+                      🗓{" "}
+                      {new Date(g.from).toLocaleDateString()} -{" "}
+                      {new Date(g.to).toLocaleDateString()}
                     </li>
                   ))}
                 </ul>
@@ -138,10 +169,18 @@ function Home() {
       {monthlyStats && (
         <div className="monthly-stat-box">
           <h3>📆 {monthlyStats.month}-oy statistikasi</h3>
-          <p><strong>Jami xonalar:</strong> {monthlyStats.totalRooms}</p>
-          <p><strong>Jami sig‘im:</strong> 209</p>
-          <p><strong>Band joylar:</strong> {monthlyStats.usedCount}</p>
-          <p><strong>Bandlik foizi:</strong> {monthlyStats.occupancyRate}%</p>
+          <p>
+            <strong>Jami xonalar:</strong> {monthlyStats.totalRooms}
+          </p>
+          <p>
+            <strong>Jami sig‘im:</strong> 209
+          </p>
+          <p>
+            <strong>Band joylar:</strong> {monthlyStats.usedCount}
+          </p>
+          <p>
+            <strong>Bandlik foizi:</strong> {monthlyStats.occupancyRate}%
+          </p>
           {diffRate !== null && (
             <p>
               📉 Oldingi oydan farq:{" "}
