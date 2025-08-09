@@ -22,7 +22,7 @@ function Home() {
       return;
     }
     try {
-      const res = await axios.post("https://mexback.onrender.com/api/rooms/availableStat", {
+      const res = await axios.post("https://mexback.onrender.com/api/rooms/getRoomAvailability ", {
         checkIn,
         checkOut,
       });
