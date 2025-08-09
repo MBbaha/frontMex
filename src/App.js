@@ -119,29 +119,42 @@ function Home() {
             ))}
           </ul>
 
-          {/* 🏢 Band xonalar ro‘yxati */}
-          {stats.occupiedRooms && stats.occupiedRooms.length > 0 && (
-            <>
-              <h4>🏢 Band xonalar ro‘yxati:</h4>
+        {/* 🏢 Band xonalar ro‘yxati */}
+{stats.occupiedRooms && stats.occupiedRooms.length > 0 && (
+  <>
+    <h4>🏢 Band xonalar ro‘yxati (kompaniya bo‘yicha)</h4>
+    {Object.entries(
+      stats.occupiedRooms.reduce((acc, room) => {
+        if (!acc[room.companyName]) {
+          acc[room.companyName] = [];
+        }
+        acc[room.companyName].push(room);
+        return acc;
+      }, {})
+    ).map(([company, rooms], idx) => (
+      <div key={idx} className="company-block">
+        <h5>
+          🏢 <strong>{company}</strong> tashkilotiga quyidagi xonalar berildi:
+        </h5>
+        <ul>
+          {rooms.map((room, rIdx) => (
+            <li key={rIdx}>
+              🛏 Xona {room.number} — Sig‘imi: {room.capacity}
               <ul>
-                {stats.occupiedRooms.map((room, idx) => (
-                  <li key={idx}>
-                    🛏 <strong>{room.number}</strong> — {room.companyName} <br />
-                    Sig‘imi: {room.capacity}
-                    <ul>
-                      {room.guests.map((g, i) => (
-                        <li key={i}>
-                          👤 {g.name}, 📞 {g.phoneNumber}
-                        </li>
-                      ))}
-                    </ul>
+                {room.guests.map((g, gIdx) => (
+                  <li key={gIdx}>
+                    👤 {g.name}, 📞 {g.phoneNumber}
                   </li>
                 ))}
               </ul>
-            </>
-          )}
-        </div>
-      )}
+            </li>
+          ))}
+        </ul>
+      </div>
+    ))}
+  </>
+)}
+
 
       {/* 🗓 Oylik Statistika */}
       {monthlyStats && (
