@@ -11,9 +11,6 @@ function Home() {
   const [stats, setStats] = useState(null);
   const [monthlyStats, setMonthlyStats] = useState(null);
   const [prevStats, setPrevStats] = useState(null);
-
-  // 🔍 QIDIRUV STATE
-  const [searchValue, setSearchValue] = useState('');
   const [searchResults, setSearchResults] = useState([]);
 
   const handleCloseStats = () => setStats(null);
@@ -36,9 +33,6 @@ function Home() {
     }
   };
 
-  // 🔍 FIRMA/TELEFON/SANA ORQALI QIDIRISH
-  
-
   useEffect(() => {
     const today = new Date();
     const year = today.getFullYear();
@@ -46,13 +40,17 @@ function Home() {
 
     const fetchMonthlyStats = async () => {
       try {
-        const current = await axios.get(`https://mexback.onrender.com/api/rooms/monthly-stats?year=${year}&month=${month}`);
+        const current = await axios.get(
+          `https://mexback.onrender.com/api/rooms/monthly-stats?year=${year}&month=${month}`
+        );
         setMonthlyStats(current.data);
 
         const prevMonth = month === 1 ? 12 : month - 1;
         const prevYear = month === 1 ? year - 1 : year;
 
-        const previous = await axios.get(`https://mexback.onrender.com/api/rooms/monthly-stats?year=${prevYear}&month=${prevMonth}`);
+        const previous = await axios.get(
+          `https://mexback.onrender.com/api/rooms/monthly-stats?year=${prevYear}&month=${prevMonth}`
+        );
         setPrevStats(previous.data);
       } catch (err) {
         console.error('Monthly stats error:', err);
@@ -62,9 +60,10 @@ function Home() {
     fetchMonthlyStats();
   }, []);
 
-  const diffRate = monthlyStats && prevStats
-    ? (monthlyStats.occupancyRate - prevStats.occupancyRate).toFixed(1)
-    : null;
+  const diffRate =
+    monthlyStats && prevStats
+      ? (monthlyStats.occupancyRate - prevStats.occupancyRate).toFixed(1)
+      : null;
 
   return (
     <div className="home-container">
@@ -90,49 +89,57 @@ function Home() {
         </div>
       </div>
 
-      {/* 🔍 QIDIRUV BO‘LIMI */}
-
-
-
       {/* 📊 Statistikani ko‘rsatish */}
       {stats && (
         <div className="statistic-float-box">
           <h3>📊 Statistika</h3>
-          <button className="close-btn" onClick={handleCloseStats}>✖ Yopish</button>
-          <p><strong>Bo‘sh xonalar:</strong> {stats.availableRooms}</p>
-          <p><strong>Bo‘sh joylar:</strong> {stats.availableCapacity}</p>
-          <p><strong>Umumiy sig‘im:</strong> 209</p>
-          <p><strong>Bandlik foizi:</strong> {stats.occupancyRate}%</p>
+          <button className="close-btn" onClick={handleCloseStats}>
+            ✖ Yopish
+          </button>
+          <p>
+            <strong>Bo‘sh xonalar:</strong> {stats.availableRooms}
+          </p>
+          <p>
+            <strong>Bo‘sh joylar:</strong> {stats.availableCapacity}
+          </p>
+          <p>
+            <strong>Umumiy sig‘im:</strong> 209
+          </p>
+          <p>
+            <strong>Bandlik foizi:</strong> {stats.occupancyRate}%
+          </p>
+
+          {/* 📃 Bo‘sh xonalar ro‘yxati */}
           <h4>📃 Bo‘sh xonalar ro‘yxati:</h4>
           <ul>
             {stats.details.map((room, idx) => (
-              <li key={idx}>🛏 {room.number}: {room.free} joy bo‘sh</li>
-            ))}
-          </ul>
-        </div>
-      )}
-
-      {/* 🔍 QIDIRUV NATIJALARI */}
-      {searchResults.length > 0 && (
-        <div className="search-result-box">
-          <h3>🔍 Qidiruv natijalari</h3>
-          <button className="close-btn" onClick={handleCloseSearch}>✖ Yopish</button>
-          <ul>
-            {searchResults.map((room, idx) => (
               <li key={idx}>
-                🛏 Xona raqami: <strong>{room.number}</strong> <br />
-                Sig‘imi: {room.capacity} <br />
-                Mehmonlar:{" "}
-                <ul>
-                  {room.guests.map((g, i) => (
-                    <li key={i}>
-                      👤 {g.name}, 📞 {g.phoneNumber}, 🏢 {g.companyName}, 🗓 {new Date(g.from).toLocaleDateString()} - {new Date(g.to).toLocaleDateString()}
-                    </li>
-                  ))}
-                </ul>
+                🛏 {room.number}: {room.free} joy bo‘sh
               </li>
             ))}
           </ul>
+
+          {/* 🏢 Band xonalar ro‘yxati */}
+          {stats.occupiedRooms && stats.occupiedRooms.length > 0 && (
+            <>
+              <h4>🏢 Band xonalar ro‘yxati:</h4>
+              <ul>
+                {stats.occupiedRooms.map((room, idx) => (
+                  <li key={idx}>
+                    🛏 <strong>{room.number}</strong> — {room.companyName} <br />
+                    Sig‘imi: {room.capacity}
+                    <ul>
+                      {room.guests.map((g, i) => (
+                        <li key={i}>
+                          👤 {g.name}, 📞 {g.phoneNumber}
+                        </li>
+                      ))}
+                    </ul>
+                  </li>
+                ))}
+              </ul>
+            </>
+          )}
         </div>
       )}
 
@@ -140,12 +147,26 @@ function Home() {
       {monthlyStats && (
         <div className="monthly-stat-box">
           <h3>📆 {monthlyStats.month}-oy statistikasi</h3>
-          <p><strong>Jami xonalar:</strong> {monthlyStats.totalRooms}</p>
-          <p><strong>Jami sig‘im:209</strong> </p>
-          <p><strong>Band joylar:</strong> {monthlyStats.usedCount}</p>
-          <p><strong>Bandlik foizi:</strong> {monthlyStats.occupancyRate}%</p>
+          <p>
+            <strong>Jami xonalar:</strong> {monthlyStats.totalRooms}
+          </p>
+          <p>
+            <strong>Jami sig‘im: 209</strong>
+          </p>
+          <p>
+            <strong>Band joylar:</strong> {monthlyStats.usedCount}
+          </p>
+          <p>
+            <strong>Bandlik foizi:</strong> {monthlyStats.occupancyRate}%
+          </p>
           {diffRate !== null && (
-            <p>📉 Oldingi oydan farq: <strong style={{ color: diffRate >= 0 ? 'green' : 'red' }}>{diffRate > 0 ? '+' : ''}{diffRate}%</strong></p>
+            <p>
+              📉 Oldingi oydan farq:{' '}
+              <strong style={{ color: diffRate >= 0 ? 'green' : 'red' }}>
+                {diffRate > 0 ? '+' : ''}
+                {diffRate}%
+              </strong>
+            </p>
           )}
         </div>
       )}
