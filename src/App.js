@@ -1,19 +1,16 @@
-import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
-import './App.css';
-import Xonalar from './xonalar';
-import axios from 'axios';
+import React, { useState, useEffect } from "react";
+import { BrowserRouter as Router, Routes, Route, useNavigate } from "react-router-dom";
+import "./App.css";
+import Xonalar from "./xonalar";
+import axios from "axios";
 
 function Home() {
   const navigate = useNavigate();
-  const [checkIn, setCheckIn] = useState('');
-  const [checkOut, setCheckOut] = useState('');
+  const [checkIn, setCheckIn] = useState("");
+  const [checkOut, setCheckOut] = useState("");
   const [stats, setStats] = useState(null);
   const [monthlyStats, setMonthlyStats] = useState(null);
   const [prevStats, setPrevStats] = useState(null);
-
-  // 🔍 QIDIRUV STATE
-
   const [searchResults, setSearchResults] = useState([]);
 
   const handleCloseStats = () => setStats(null);
@@ -21,23 +18,20 @@ function Home() {
 
   const handleCheckAvailability = async () => {
     if (!checkIn || !checkOut) {
-      alert('Iltimos, sana oralig‘ini tanlang.');
+      alert("Iltimos, sana oralig‘ini tanlang.");
       return;
     }
     try {
-      const res = await axios.post('https://mexback.onrender.com/api/rooms/availableStat', {
+      const res = await axios.post("https://mexback.onrender.com/api/rooms/availableStat", {
         checkIn,
         checkOut,
       });
       setStats(res.data);
     } catch (err) {
       console.error(err);
-      alert('Xatolik yuz berdi');
+      alert("Xatolik yuz berdi");
     }
   };
-
-  // 🔍 FIRMA/TELEFON/SANA ORQALI QIDIRISH
-  
 
   useEffect(() => {
     const today = new Date();
@@ -46,40 +40,45 @@ function Home() {
 
     const fetchMonthlyStats = async () => {
       try {
-        const current = await axios.get(`https://mexback.onrender.com/api/rooms/monthly-stats?year=${year}&month=${month}`);
+        const current = await axios.get(
+          `https://mexback.onrender.com/api/rooms/monthly-stats?year=${year}&month=${month}`
+        );
         setMonthlyStats(current.data);
 
         const prevMonth = month === 1 ? 12 : month - 1;
         const prevYear = month === 1 ? year - 1 : year;
 
-        const previous = await axios.get(`https://mexback.onrender.com/api/rooms/monthly-stats?year=${prevYear}&month=${prevMonth}`);
+        const previous = await axios.get(
+          `https://mexback.onrender.com/api/rooms/monthly-stats?year=${prevYear}&month=${prevMonth}`
+        );
         setPrevStats(previous.data);
       } catch (err) {
-        console.error('Monthly stats error:', err);
+        console.error("Monthly stats error:", err);
       }
     };
 
     fetchMonthlyStats();
   }, []);
 
-  const diffRate = monthlyStats && prevStats
-    ? (monthlyStats.occupancyRate - prevStats.occupancyRate).toFixed(1)
-    : null;
+  const diffRate =
+    monthlyStats && prevStats
+      ? (monthlyStats.occupancyRate - prevStats.occupancyRate).toFixed(1)
+      : null;
 
   return (
     <div className="home-container">
       <h1 className="home-title">📋 Mijozlar Boshqaruvi</h1>
 
       <div className="button-group">
-        <button className="home-btn" onClick={() => navigate('/xonalar')}>
+        <button className="home-btn" onClick={() => navigate("/xonalar")}>
           ➕ Yangi mijoz qo‘shish
         </button>
-        <button className="home-btn" onClick={() => navigate('/xonalar')}>
+        <button className="home-btn" onClick={() => navigate("/xonalar")}>
           🍽️ Ovqatlar haqida ma'lumot
         </button>
       </div>
 
-      {/* 📅 Statistika hisobi */}
+      {/* 📅 Statistika formasi */}
       <div className="statistic-form">
         <h2>📊 Bo‘sh joylar statistikasi</h2>
         <div className="form-row">
@@ -90,19 +89,18 @@ function Home() {
         </div>
       </div>
 
-      {/* 🔍 QIDIRUV BO‘LIMI */}
-
-
-
       {/* 📊 Statistikani ko‘rsatish */}
       {stats && (
         <div className="statistic-float-box">
           <h3>📊 Statistika</h3>
-          <button className="close-btn" onClick={handleCloseStats}>✖ Yopish</button>
+          <button className="close-btn" onClick={handleCloseStats}>
+            ✖ Yopish
+          </button>
           <p><strong>Bo‘sh xonalar:</strong> {stats.availableRooms}</p>
           <p><strong>Bo‘sh joylar:</strong> {stats.availableCapacity}</p>
           <p><strong>Umumiy sig‘im:</strong> 209</p>
           <p><strong>Bandlik foizi:</strong> {stats.occupancyRate}%</p>
+
           <h4>📃 Bo‘sh xonalar ro‘yxati:</h4>
           <ul>
             {stats.details.map((room, idx) => (
@@ -112,7 +110,7 @@ function Home() {
         </div>
       )}
 
-      {/* 🔍 QIDIRUV NATIJALARI */}
+      {/* 🔍 Qidiruv natijalari */}
       {searchResults.length > 0 && (
         <div className="search-result-box">
           <h3>🔍 Qidiruv natijalari</h3>
@@ -121,12 +119,12 @@ function Home() {
             {searchResults.map((room, idx) => (
               <li key={idx}>
                 🛏 Xona raqami: <strong>{room.number}</strong> <br />
-                Sig‘imi: {room.capacity} <br />
-                Mehmonlar:{" "}
+                Sig‘imi: {room.capacity}
                 <ul>
                   {room.guests.map((g, i) => (
                     <li key={i}>
-                      👤 {g.name}, 📞 {g.phoneNumber}, 🏢 {g.companyName}, 🗓 {new Date(g.from).toLocaleDateString()} - {new Date(g.to).toLocaleDateString()}
+                      👤 {g.name}, 📞 {g.phoneNumber}, 🏢 {g.companyName},
+                      🗓 {new Date(g.from).toLocaleDateString()} - {new Date(g.to).toLocaleDateString()}
                     </li>
                   ))}
                 </ul>
@@ -141,11 +139,17 @@ function Home() {
         <div className="monthly-stat-box">
           <h3>📆 {monthlyStats.month}-oy statistikasi</h3>
           <p><strong>Jami xonalar:</strong> {monthlyStats.totalRooms}</p>
-          <p><strong>Jami sig‘im:209</strong> </p>
+          <p><strong>Jami sig‘im:</strong> 209</p>
           <p><strong>Band joylar:</strong> {monthlyStats.usedCount}</p>
           <p><strong>Bandlik foizi:</strong> {monthlyStats.occupancyRate}%</p>
           {diffRate !== null && (
-            <p>📉 Oldingi oydan farq: <strong style={{ color: diffRate >= 0 ? 'green' : 'red' }}>{diffRate > 0 ? '+' : ''}{diffRate}%</strong></p>
+            <p>
+              📉 Oldingi oydan farq:{" "}
+              <strong style={{ color: diffRate >= 0 ? "green" : "red" }}>
+                {diffRate > 0 ? "+" : ""}
+                {diffRate}%
+              </strong>
+            </p>
           )}
         </div>
       )}
