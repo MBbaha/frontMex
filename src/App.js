@@ -107,7 +107,7 @@ function Home() {
             <strong>Bandlik foizi:</strong> {stats.occupancyRate}%
           </p>
 
-         {/* 🏢 Band xonalar ro‘yxati */}
+       {/* 🏢 Band xonalar ro‘yxati */}
 {stats.occupiedRooms && stats.occupiedRooms.length > 0 && (
   <>
     <h4>🏢 Band xonalar ro‘yxati (kompaniya bo‘yicha)</h4>
@@ -120,26 +120,23 @@ function Home() {
         return acc;
       }, {})
     ).map(([company, rooms], idx) => {
-      
-      // Agar kompaniya "Risola" bo‘lsa, qo‘shimcha xonalar qo‘shamiz
-      if (company.toLowerCase() === "risola") {
-        const risolaRooms = [701, 702, 703, 704, 705, 706, 707, 708, 709].map(num => ({
-          number: num,
-          capacity: 'Noma’lum', // Agar sig‘im ma’lum bo‘lsa, shu yerda ko‘rsatish mumkin
-          guests: []
-        }));
-        rooms = [...rooms, ...risolaRooms];
-      }
-
       return (
         <div key={idx} className="company-block">
           <h5>
             🏢 <strong>{company}</strong> tashkilotiga quyidagi xonalar berildi:
           </h5>
+
+          {/* Umumiy odam sonini hisoblash */}
+          <p>
+            👥 <strong>Jami joylashtirilgan odamlar:</strong>{" "}
+            {rooms.reduce((sum, room) => sum + (room.guests?.length || 0), 0)} kishi
+          </p>
+
           <ul>
             {rooms.map((room, rIdx) => (
               <li key={rIdx}>
-                🛏 Xona {room.number} — Sig‘imi: {room.capacity}
+                🛏 Xona {room.number} — Sig‘imi: {room.capacity} — Band:{" "}
+                {room.guests?.length || 0} kishi
                 {room.guests && room.guests.length > 0 && (
                   <ul>
                     {room.guests.map((g, gIdx) => (
@@ -157,6 +154,7 @@ function Home() {
     })}
   </>
 )}
+
 
 
           {/* 🗓 Oylik Statistika */}
