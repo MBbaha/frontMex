@@ -81,62 +81,23 @@ function Home() {
         </button>
       </div>
 
-      {/* 📅 Statistika hisobi */}
-      <div className="statistic-form">
-        <h2>📊 Bo‘sh joylar statistikasi</h2>
-        <div className="form-row">
-          <input
-            type="date"
-            value={checkIn}
-            onChange={(e) => setCheckIn(e.target.value)}
-          />
-          <span>⟶</span>
-          <input
-            type="date"
-            value={checkOut}
-            onChange={(e) => setCheckOut(e.target.value)}
-          />
-          <button onClick={handleCheckAvailability}>Hisoblash</button>
-        </div>
-      </div>
-
-      {/* 📊 Statistikani ko‘rsatish */}
+    {/* 📊 Statistikani ko‘rsatish */}
       {stats && (
-  <div className="statistic-float-box">
-    <h3>📊 Bo‘sh joylar statistikasi</h3>
-    <button className="close-btn" onClick={handleCloseStats}>
-      ✖ Yopish
-    </button>
-
-    {/* Umumiy sig‘im */}
-    <p>
-      <strong>🏠 Umumiy sig‘im:</strong> 209 ta joy
-    </p>
-
-    {/* Bo‘sh joylar umumiy soni */}
-    <p>
-      <strong>🪑 Bo‘sh joylar soni:</strong> {stats.availableCapacity} ta
-    </p>
-
-    {/* Bo‘sh xonalar ro‘yxati */}
-    {stats?.availableRoomsList?.length > 0 ? (
-      <div className="available-rooms">
-        <h4>🆓 Bo‘sh xonalar ro‘yxati</h4>
-        <ul>
-          {stats.availableRoomsList.map((room, idx) => (
-            <li key={idx}>
-              🛏 Xona {room.number} — Sig‘imi: {room.capacity} — Hozir band:{" "}
-              {room.guests?.length || 0} kishi
-            </li>
-          ))}
-        </ul>
-      </div>
-    ) : (
-      <p>❌ Hozircha bo‘sh xona yo‘q</p>
-    )}
-  </div>
-)}
-
+        <div className="statistic-float-box">
+          <h3>📊 Statistika</h3>
+          <button className="close-btn" onClick={handleCloseStats}>✖ Yopish</button>
+          <p><strong>Bo‘sh xonalar:</strong> {stats.availableRooms}</p>
+          <p><strong>Bo‘sh joylar:</strong> {stats.availableCapacity}</p>
+          <p><strong>Umumiy sig‘im:</strong> 209</p>
+          <p><strong>Bandlik foizi:</strong> {stats.occupancyRate}%</p>
+          <h4>📃 Bo‘sh xonalar ro‘yxati:</h4>
+          <ul>
+            {stats.details.map((room, idx) => (
+              <li key={idx}>🛏 {room.number}: {room.free} joy bo‘sh</li>
+            ))}
+          </ul>
+        </div>
+      )}
 
           {/* 🗓 Oylik Statistika */}
           {monthlyStats && (
