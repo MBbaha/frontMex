@@ -107,6 +107,22 @@ function Home() {
             <strong>Bandlik foizi:</strong> {stats.occupancyRate}%
           </p>
 
+       {/* 🆓 Bo‘sh xonalar ro‘yxati */}
+{stats?.availableRoomsList?.length > 0 && (
+  <div className="available-rooms">
+    <h4>🆓 Bo‘sh xonalar ro‘yxati</h4>
+    <ul>
+      {stats.availableRoomsList.map((room, idx) => (
+        <li key={idx}>
+          🛏 Xona {room.number} — Sig‘imi: {room.capacity} — Hozir band:{" "}
+          {room.guests?.length || 0} kishi
+        </li>
+      ))}
+    </ul>
+  </div>
+)}
+
+
      {/* 📊 Band xonalar ro‘yxati */}
 {stats?.occupiedRooms?.length > 0 && (
   <div className="occupied-rooms">
