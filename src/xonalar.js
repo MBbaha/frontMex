@@ -20,42 +20,34 @@ const [orgCheckOut, setOrgCheckOut] = useState('');
 const [orgRoomsData, setOrgRoomsData] = useState([]);
 
   
-const fetchOrgRooms = async () => {
-  if (!orgCheckIn || !orgCheckOut) {
-    alert("Kirish va chiqish sanalarini kiriting");
-    return;
-  }
+const getBookedRooms = async (req, res) => {
   try {
-    const res = await axios.get(`https://mexback.onrender.com/api/rooms/getBookedRooms`, {
-      params: {
-        checkIn: new Date(orgCheckIn).toISOString().split('T')[0],
-        checkOut: new Date(orgCheckOut).toISOString().split('T')[0]
+    const { checkIn, checkOut } = req.query;
+
+    if (!checkIn || !checkOut) {
+      return res.status(400).json({ message: "checkIn va checkOut sanalarini kiriting" });
+    }
+
+    const startDate = new Date(checkIn);
+    const endDate = new Date(checkOut);
+
+    const bookedRooms = await Room.find({
+      guests: {
+        $elemMatch: {
+          from: { $lte: endDate },
+          to: { $gte: startDate }
+        }
       }
     });
 
-    // 🔹 Tashkilot bo‘yicha guruhlash
-    const grouped = {};
-    res.data.forEach(room => {
-      room.guests.forEach(guest => {
-        if (guest.companyName) {
-          if (!grouped[guest.companyName]) grouped[guest.companyName] = [];
-          grouped[guest.companyName].push(room.number);
-        }
-      });
-    });
-
-    // Objectdan massiv shakliga o‘tkazamiz
-    const result = Object.entries(grouped).map(([company, rooms]) => ({
-      company,
-      rooms: [...new Set(rooms)] // takrorlanmas xonalar
-    }));
-
-    setOrgRoomsData(result);
+    res.json(bookedRooms);
   } catch (err) {
-    console.error(err);
-    alert("Xatolik yuz berdi");
+    console.error("Xatolik:", err);
+    res.status(500).json({ message: "Server xatosi" });
   }
 };
+
+  
 
   useEffect(() => {
     fetchRooms();
@@ -304,5 +296,6 @@ const fetchOrgRooms = async () => {
 }
 
 export default RoomDashboard;
+
 
 
