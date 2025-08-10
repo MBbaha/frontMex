@@ -20,32 +20,44 @@ const [orgCheckOut, setOrgCheckOut] = useState('');
 const [orgRoomsData, setOrgRoomsData] = useState([]);
 
   
-const getBookedRooms = async (req, res) => {
+// 🔹 Tashkilot bo‘yicha xonalarni olish (frontend)
+const fetchOrgRooms = async () => {
+  if (!orgCheckIn || !orgCheckOut) {
+    alert("Kirish va chiqish sanalarini kiriting");
+    return;
+  }
   try {
-    const { checkIn, checkOut } = req.query;
-
-    if (!checkIn || !checkOut) {
-      return res.status(400).json({ message: "checkIn va checkOut sanalarini kiriting" });
-    }
-
-    const startDate = new Date(checkIn);
-    const endDate = new Date(checkOut);
-
-    const bookedRooms = await Room.find({
-      guests: {
-        $elemMatch: {
-          from: { $lte: endDate },
-          to: { $gte: startDate }
-        }
+    const res = await axios.get(`https://mexback.onrender.com/api/rooms/getBookedRooms`, {
+      params: {
+        checkIn: new Date(orgCheckIn).toISOString().split('T')[0],
+        checkOut: new Date(orgCheckOut).toISOString().split('T')[0]
       }
     });
 
-    res.json(bookedRooms);
+    // 🔹 Tashkilot bo‘yicha guruhlash
+    const grouped = {};
+    res.data.forEach(room => {
+      room.guests.forEach(guest => {
+        if (guest.companyName) {
+          if (!grouped[guest.companyName]) grouped[guest.companyName] = [];
+          grouped[guest.companyName].push(room.number);
+        }
+      });
+    });
+
+    // Objectni massivga aylantirish
+    const result = Object.entries(grouped).map(([company, rooms]) => ({
+      company,
+      rooms: [...new Set(rooms)]
+    }));
+
+    setOrgRoomsData(result);
   } catch (err) {
-    console.error("Xatolik:", err);
-    res.status(500).json({ message: "Server xatosi" });
+    console.error(err);
+    alert("Xatolik yuz berdi");
   }
 };
+
 
   
 
@@ -296,6 +308,7 @@ const getBookedRooms = async (req, res) => {
 }
 
 export default RoomDashboard;
+
 
 
 
