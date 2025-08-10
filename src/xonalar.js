@@ -21,46 +21,89 @@ function RoomDashboard() {
   const [orgRoomsData, setOrgRoomsData] = useState([]);
 
   // 🔹 Tashkilot bo‘yicha xonalarni olish
-  const fetchOrgRooms = async () => {
-    if (!orgCheckIn || !orgCheckOut) {
-      alert('Kirish va chiqish sanalarini kiriting');
+ const fetchOrgRooms = async () => {
+  if (!orgCheckIn || !orgCheckOut) {
+    alert('Kirish va chiqish sanalarini kiriting');
+    return;
+  }
+
+  try {
+    // 1) Log: yuborilayotgan parametrlarga qaraymiz
+    console.log('fetchOrgRooms -> sending params:', { orgCheckIn, orgCheckOut });
+
+    // 2) Oddiy string formatida yuborib ko'rish (backend odatda YYYY-MM-DD qabul qiladi)
+    const params = {
+      checkIn: orgCheckIn,   // yoki: new Date(orgCheckIn).toISOString().split('T')[0]
+      checkOut: orgCheckOut,
+    };
+
+    const res = await axios.get(
+      'https://mexback.onrender.com/api/rooms/getBookedRooms',
+      { params, timeout: 10000 }
+    );
+
+    // 3) Log: backenddan kelgan to'liq javob
+    console.log('fetchOrgRooms -> axios response:', res);
+
+    // 4) Javob ma'lumotini xavfsiz olish: turli strukturalarni qoplaymiz
+    const raw = res.data;
+    // Agar backend { rooms: [...] } yoki { availableRoomsList: [...] } qaytarsa ham ishlasin:
+    const roomsArray = Array.isArray(raw)
+      ? raw
+      : Array.isArray(raw.rooms)
+      ? raw.rooms
+      : Array.isArray(raw.availableRoomsList)
+      ? raw.availableRoomsList
+      : [];
+
+    console.log('fetchOrgRooms -> roomsArray sample (first item):', roomsArray[0] ?? 'empty');
+
+    if (!roomsArray.length) {
+      setOrgRoomsData([]);
+      alert('Berilgan sanalarda bronlangan xona topilmadi yoki server bo‘sh ro‘yxat qaytardi.');
       return;
     }
 
-    try {
-      const res = await axios.get(
-        'https://mexback.onrender.com/api/rooms/getBookedRooms',
-        {
-          params: {
-            checkIn: new Date(orgCheckIn).toISOString().split('T')[0],
-            checkOut: new Date(orgCheckOut).toISOString().split('T')[0],
-          },
+    // 5) Guruhlash — guests may exist yoki yo'qligini tekshiramiz
+    const grouped = {};
+    roomsArray.forEach((room) => {
+      const guests = Array.isArray(room.guests) ? room.guests : [];
+      guests.forEach((guest) => {
+        // turli maydon nomlarini ham tekshiramiz (companyName, company, org)
+        const company = guest.companyName || guest.company || guest.organization || guest.org;
+        if (company) {
+          if (!grouped[company]) grouped[company] = [];
+          // room.number bo'lmasa room._id yoki room.name qo'yish
+          grouped[company].push(room.number ?? room.name ?? room._id ?? 'unknown-room');
         }
-      );
-
-      // 🔹 Guruhlash
-      const grouped = {};
-      (res.data || []).forEach((room) => {
-        (room.guests || []).forEach((guest) => {
-          if (guest.companyName) {
-            if (!grouped[guest.companyName]) grouped[guest.companyName] = [];
-            grouped[guest.companyName].push(room.number);
-          }
-        });
       });
+    });
 
-      // 🔹 Massivga aylantirish va dublikatlarni olib tashlash
-      const result = Object.entries(grouped).map(([company, rooms]) => ({
-        company,
-        rooms: [...new Set(rooms)],
-      }));
+    const result = Object.entries(grouped).map(([company, rooms]) => ({
+      company,
+      rooms: [...new Set(rooms)],
+    }));
 
-      setOrgRoomsData(result);
-    } catch (err) {
-      console.error('API Error:', err.response?.data || err.message);
-      alert('Xatolik yuz berdi');
+    console.log('fetchOrgRooms -> grouped result:', result);
+    setOrgRoomsData(result);
+  } catch (err) {
+    // 6) Batafsil xato tahlili
+    if (err.response) {
+      // Server javob berdi (400, 500 va hokazo)
+      console.error('API response error:', err.response.status, err.response.data);
+      alert(`Server xatosi: ${err.response.status} — ${JSON.stringify(err.response.data)}`);
+    } else if (err.request) {
+      // So'rov yuborildi lekin javob kelmadi (network / CORS)
+      console.error('No response (request):', err.request);
+      alert('Tarmoq yoki CORS muammosi — server javob bermadi. DevTools -> Network ni tekshiring.');
+    } else {
+      // Boshqa xatolik (kod xatosi)
+      console.error('Request setup error:', err.message);
+      alert('Xatolik: ' + err.message);
     }
-  };
+  }
+};
+
 
   // 🔹 Xonalarni olish
   const fetchRooms = async () => {
@@ -394,3 +437,4 @@ function RoomDashboard() {
 }
 
 export default RoomDashboard;
+
