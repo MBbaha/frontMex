@@ -106,6 +106,43 @@ function RoomDashboard() {
     <div className="room-dashboard">
       <h1>📅 Shaxmatka (Xona Bandlik Jadvali)</h1>
       <button onClick={() => setShowBookingForm(true)}>➕ Xona bron qilish</button>
+ <button onClick={() => setShowOrgRoomsModal(true)}>🏢 Xonalar ro‘yxatini olish</button>
+
+{showOrgRoomsModal && (
+  <div className="booking-overlay">
+    <div className="booking-form">
+      <h2>🏢 Tashkilot bo‘yicha xonalar</h2>
+      <input
+        type="date"
+        value={orgCheckIn}
+        onChange={(e) => setOrgCheckIn(e.target.value)}
+      />
+      <input
+        type="date"
+        value={orgCheckOut}
+        onChange={(e) => setOrgCheckOut(e.target.value)}
+      />
+      <button onClick={fetchOrgRooms}>🔍 Qidirish</button>
+      <button onClick={() => setShowOrgRoomsModal(false)} style={{ marginLeft: 10 }}>Yopish</button>
+
+      {/* Natijalar */}
+      {orgRoomsData.length > 0 && (
+        <div style={{ marginTop: '15px', textAlign: 'left' }}>
+          {orgRoomsData.map((org, idx) => (
+            <div key={idx} style={{ marginBottom: '10px' }}>
+              <strong>{org.company}</strong>
+              <ul>
+                {org.rooms.map((room, i) => (
+                  <li key={i}>🛏 {room}</li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  </div>
+)}
 
       {showBookingForm && (
         <div className="booking-overlay">
@@ -225,3 +262,4 @@ function RoomDashboard() {
 }
 
 export default RoomDashboard;
+
