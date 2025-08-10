@@ -4,7 +4,7 @@ import './App.css';
 import Xonalar from './xonalar';
 import axios from 'axios';
 
-function Home() {
+
   const navigate = useNavigate();
   const [checkIn, setCheckIn] = useState('');
   const [checkOut, setCheckOut] = useState('');
