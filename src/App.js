@@ -4,35 +4,35 @@ import './App.css';
 import Xonalar from './xonalar';
 import axios from 'axios';
 
-
+function Home() {
   const navigate = useNavigate();
   const [checkIn, setCheckIn] = useState('');
   const [checkOut, setCheckOut] = useState('');
   const [stats, setStats] = useState(null);
 
   // 📌 Bo‘sh joylarni tekshirish
- const handleCheckAvailability = async () => {
-  if (!checkIn || !checkOut) {
-    alert('Iltimos, kirish va chiqish sanalarini tanlang.');
-    return;
-  }
-  try {
-    const res = await axios.get(
-      `https://mexback.onrender.com/api/rooms/availableStat`,
-      {
-        params: {
-          checkIn: new Date(checkIn).toISOString().split('T')[0],
-          checkOut: new Date(checkOut).toISOString().split('T')[0]
+  const handleCheckAvailability = async () => {
+    if (!checkIn || !checkOut) {
+      alert('Iltimos, kirish va chiqish sanalarini tanlang.');
+      return;
+    }
+    try {
+      const res = await axios.get(
+        `https://mexback.onrender.com/api/rooms/availableStat`,
+        {
+          params: {
+            checkIn: new Date(checkIn).toISOString().split('T')[0],
+            checkOut: new Date(checkOut).toISOString().split('T')[0]
+          }
         }
-      }
-    );
-    console.log("API javobi:", res.data);
-    setStats(res.data);
-  } catch (err) {
-    console.error(err);
-    alert("Xatolik yuz berdi. Server bilan bog‘lanib bo‘lmadi.");
-  }
-};
+      );
+      console.log("API javobi:", res.data);
+      setStats(res.data);
+    } catch (err) {
+      console.error(err);
+      alert("Xatolik yuz berdi. Server bilan bog‘lanib bo‘lmadi.");
+    }
+  };
 
   return (
     <div className="home-container">
@@ -100,4 +100,3 @@ function App() {
 }
 
 export default App;
-
