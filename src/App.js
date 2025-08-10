@@ -87,125 +87,101 @@ function Home() {
         </div>
       </div>
 
-      {/* 📊 Statistikani ko‘rsatish */}
-      {stats && (
-        <div className="statistic-float-box">
-          <h3>📊 Statistika</h3>
-          <button className="close-btn" onClick={handleCloseStats}>
-            ✖ Yopish
-          </button>
-          <p>
-            <strong>Bo‘sh xonalar:</strong> {stats.availableRooms}
-          </p>
-          <p>
-            <strong>Bo‘sh joylar:</strong> {stats.availableCapacity}
-          </p>
-          <p>
-            <strong>Umumiy sig‘im:</strong> 209
-          </p>
-          <p>
-            <strong>Bandlik foizi:</strong> {stats.occupancyRate}%
-          </p>
+     {/* 📊 Statistikani ko‘rsatish */}
+{stats && (
+  <div className="statistic-float-box">
+    <h3>📊 Statistika</h3>
+    <button className="close-btn" onClick={handleCloseStats}>
+      ✖ Yopish
+    </button>
 
-       {/* 🆓 Bo‘sh xonalar ro‘yxati */}
-{stats?.availableRoomsList?.length > 0 && (
-  <div className="available-rooms">
-    <h4>🆓 Bo‘sh xonalar ro‘yxati</h4>
-    <ul>
-      {stats.availableRoomsList.map((room, idx) => (
-        <li key={idx}>
-          🛏 Xona {room.number} — Sig‘imi: {room.capacity} — Hozir band:{" "}
-          {room.guests?.length || 0} kishi
-        </li>
-      ))}
-    </ul>
-  </div>
-)}
+    {/* Asosiy umumiy ko‘rsatkichlar */}
+    <p><strong>🆓 Bo‘sh xonalar soni:</strong> {stats.availableRooms} ta</p>
+    <p><strong>🪑 Bo‘sh joylar soni:</strong> {stats.availableCapacity} ta</p>
+    <p><strong>🏠 Umumiy sig‘im:</strong> 209 ta joy</p>
+    <p><strong>📈 Bandlik foizi:</strong> {stats.occupancyRate}%</p>
 
+    {/* 🆓 Bo‘sh xonalar ro‘yxati */}
+    {stats?.availableRoomsList?.length > 0 ? (
+      <div className="available-rooms">
+        <h4>🆓 Bo‘sh xonalar ro‘yxati</h4>
+        <ul>
+          {stats.availableRoomsList.map((room, idx) => (
+            <li key={idx}>
+              🛏 Xona {room.number} — Sig‘imi: {room.capacity} — Hozir band:{" "}
+              {room.guests?.length || 0} kishi
+            </li>
+          ))}
+        </ul>
+      </div>
+    ) : (
+      <p>❌ Hozircha bo‘sh xona yo‘q</p>
+    )}
 
-     {/* 📊 Band xonalar ro‘yxati */}
-{stats?.occupiedRooms?.length > 0 && (
-  <div className="occupied-rooms">
-    <h4>🏢 Band xonalar ro‘yxati (kompaniya bo‘yicha)</h4>
-
-    {Object.entries(
-      stats.occupiedRooms.reduce((acc, room) => {
-        if (!acc[room.companyName]) acc[room.companyName] = [];
-        acc[room.companyName].push(room);
-        return acc;
-      }, {})
-    ).map(([company, rooms], idx) => {
-      // Jami odamlar soni
-      const totalGuests = rooms.reduce(
-        (sum, room) => sum + (room.guests?.length || 0),
-        0
-      );
-
-      return (
-        <div key={idx} className="company-block">
-          <h5>
-            🏢 <strong>{company}</strong>
-          </h5>
-          <p>👥 <strong>Jami joylashtirilgan odamlar:</strong> {totalGuests} kishi</p>
-
-          <ul>
-            {rooms.map((room, rIdx) => (
-              <li key={rIdx}>
-                🛏 Xona {room.number} — Sig‘imi: {room.capacity} — Band:{" "}
-                {room.guests?.length || 0} kishi
-                {room.guests?.length > 0 && (
-                  <ul>
-                    {room.guests.map((g, gIdx) => (
-                      <li key={gIdx}>
-                        👤 {g.name} {g.phoneNumber && `📞 ${g.phoneNumber}`}
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </li>
-            ))}
-          </ul>
-        </div>
-      );
-    })}
-  </div>
-)}
-
-
-
-
-          {/* 🗓 Oylik Statistika */}
-          {monthlyStats && (
-            <div className="monthly-stat-box">
-              <h3>📆 {monthlyStats.month}-oy statistikasi</h3>
-              <p>
-                <strong>Jami xonalar:</strong> {monthlyStats.totalRooms}
-              </p>
-              <p>
-                <strong>Jami sig‘im: 209</strong>
-              </p>
-              <p>
-                <strong>Band joylar:</strong> {monthlyStats.usedCount}
-              </p>
-              <p>
-                <strong>Bandlik foizi:</strong> {monthlyStats.occupancyRate}%
-              </p>
-              {diffRate !== null && (
-                <p>
-                  📉 Oldingi oydan farq:{' '}
-                  <strong style={{ color: diffRate >= 0 ? 'green' : 'red' }}>
-                    {diffRate > 0 ? '+' : ''}
-                    {diffRate}%
-                  </strong>
-                </p>
-              )}
+    {/* 📊 Band xonalar ro‘yxati */}
+    {stats?.occupiedRooms?.length > 0 && (
+      <div className="occupied-rooms">
+        <h4>🏢 Band xonalar (kompaniyalar bo‘yicha)</h4>
+        {Object.entries(
+          stats.occupiedRooms.reduce((acc, room) => {
+            if (!acc[room.companyName]) acc[room.companyName] = [];
+            acc[room.companyName].push(room);
+            return acc;
+          }, {})
+        ).map(([company, rooms], idx) => {
+          const totalGuests = rooms.reduce(
+            (sum, room) => sum + (room.guests?.length || 0),
+            0
+          );
+          return (
+            <div key={idx} className="company-block">
+              <h5>🏢 {company}</h5>
+              <p>👥 Jami joylashtirilgan: {totalGuests} kishi</p>
+              <ul>
+                {rooms.map((room, rIdx) => (
+                  <li key={rIdx}>
+                    🛏 Xona {room.number} — Sig‘imi: {room.capacity} — Band:{" "}
+                    {room.guests?.length || 0} kishi
+                    {room.guests?.length > 0 && (
+                      <ul>
+                        {room.guests.map((g, gIdx) => (
+                          <li key={gIdx}>
+                            👤 {g.name} {g.phoneNumber && `📞 ${g.phoneNumber}`}
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </li>
+                ))}
+              </ul>
             </div>
-          )}
-        </div>
-      )}
-    </div>
-  );
-}
+          );
+        })}
+      </div>
+    )}
+
+    {/* 🗓 Oylik Statistika */}
+    {monthlyStats && (
+      <div className="monthly-stat-box">
+        <h3>📆 {monthlyStats.month}-oy statistikasi</h3>
+        <p><strong>Jami xonalar:</strong> {monthlyStats.totalRooms}</p>
+        <p><strong>Jami sig‘im:</strong> 209</p>
+        <p><strong>Band joylar:</strong> {monthlyStats.usedCount}</p>
+        <p><strong>Bandlik foizi:</strong> {monthlyStats.occupancyRate}%</p>
+        {diffRate !== null && (
+          <p>
+            📉 Oldingi oydan farq:{" "}
+            <strong style={{ color: diffRate >= 0 ? "green" : "red" }}>
+              {diffRate > 0 ? "+" : ""}
+              {diffRate}%
+            </strong>
+          </p>
+        )}
+      </div>
+    )}
+  </div>
+)}
+
 
 function App() {
   return (
