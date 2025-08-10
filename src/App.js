@@ -17,7 +17,7 @@ function Home() {
       return;
     }
     try {
-      const res = await axios.post(
+      const res = await axios.get(
         'https://mexback.onrender.com/api/rooms/availableStat',
         {
           checkIn: new Date(checkIn).toISOString().split('T')[0],
