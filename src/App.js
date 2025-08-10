@@ -100,7 +100,7 @@ function Home() {
           <p><strong>Bandlik foizi:</strong> {stats.occupancyRate}%</p>
           <h4>📃 Bo‘sh xonalar ro‘yxati:</h4>
           <ul>
-            {(stats.details || []).map((room, idx) => (
+            {stats.details.map((room, idx) => (
               <li key={idx}>🛏 {room.number}: {room.free} joy bo‘sh</li>
             ))}
           </ul>
