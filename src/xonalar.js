@@ -14,6 +14,48 @@ function RoomDashboard() {
   const [message, setMessage] = useState('');
   const [selectedRoomGuests, setSelectedRoomGuests] = useState(null);
   const [showBookingForm, setShowBookingForm] = useState(false);
+const [showOrgRoomsModal, setShowOrgRoomsModal] = useState(false);
+const [orgCheckIn, setOrgCheckIn] = useState('');
+const [orgCheckOut, setOrgCheckOut] = useState('');
+const [orgRoomsData, setOrgRoomsData] = useState([]);
+
+  
+const fetchOrgRooms = async () => {
+  if (!orgCheckIn || !orgCheckOut) {
+    alert("Kirish va chiqish sanalarini kiriting");
+    return;
+  }
+  try {
+    const res = await axios.get(`https://mexback.onrender.com/api/rooms/getBookedRooms`, {
+      params: {
+        checkIn: new Date(orgCheckIn).toISOString().split('T')[0],
+        checkOut: new Date(orgCheckOut).toISOString().split('T')[0]
+      }
+    });
+
+    // 🔹 Tashkilot bo‘yicha guruhlash
+    const grouped = {};
+    res.data.forEach(room => {
+      room.guests.forEach(guest => {
+        if (guest.companyName) {
+          if (!grouped[guest.companyName]) grouped[guest.companyName] = [];
+          grouped[guest.companyName].push(room.number);
+        }
+      });
+    });
+
+    // Objectdan massiv shakliga o‘tkazamiz
+    const result = Object.entries(grouped).map(([company, rooms]) => ({
+      company,
+      rooms: [...new Set(rooms)] // takrorlanmas xonalar
+    }));
+
+    setOrgRoomsData(result);
+  } catch (err) {
+    console.error(err);
+    alert("Xatolik yuz berdi");
+  }
+};
 
   useEffect(() => {
     fetchRooms();
@@ -262,4 +304,5 @@ function RoomDashboard() {
 }
 
 export default RoomDashboard;
+
 
