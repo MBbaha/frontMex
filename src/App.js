@@ -34,7 +34,7 @@ const [availableRoomsData, setAvailableRoomsData] = useState([]);
 
     try {
       const res = await axios.get(
-        'https://mexback.onrender.com/api/rooms/getFreeRoom',
+        'https://mexback.onrender.com/api/rooms/freeRoom',
         {
           checkIn: availCheckIn,
           checkOut: availCheckOut
