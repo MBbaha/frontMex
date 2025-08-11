@@ -26,43 +26,47 @@ const [availCheckOut, setAvailCheckOut] = useState('');
 const [availableRoomsData, setAvailableRoomsData] = useState([]);
 
 
-    const fetchAvailableRooms = async () => {
-    if (!availCheckIn || !availCheckOut) {
-      alert('Kirish va chiqish sanalarini kiriting');
-      return;
-    }
+  const fetchAvailableRooms = async () => {
+  if (!availCheckIn || !availCheckOut) {
+    alert('Kirish va chiqish sanalarini kiriting');
+    return;
+  }
 
-    try {
-      const res = await axios.get(
-        'https://mexback.onrender.com/api/rooms/freeRoom',
-        {
+  try {
+    const res = await axios.get(
+      'https://mexback.onrender.com/api/rooms/freeRoom',
+      {
+        params: {
           checkIn: availCheckIn,
           checkOut: availCheckOut
-        }
-      );
-
-      console.log('📥 Bo‘sh xonalar:', res.data);
-
-      const roomsArray = Array.isArray(res.data.details) ? res.data.details : [];
-
-      // Xonalarni raqam bo‘yicha tartiblash
-      const sorted = roomsArray.sort((a, b) => {
-        const numA = parseInt(a.number.replace(/\D/g, ''), 10);
-        const numB = parseInt(b.number.replace(/\D/g, ''), 10);
-        return numA - numB;
-      });
-
-      setAvailableRoomsData(sorted);
-
-      if (!sorted.length) {
-        alert('Berilgan sanalarda bo‘sh xona topilmadi.');
+        },
+        timeout: 10000 // xohlasangiz qo‘shishingiz mumkin
       }
-    } catch (err) {
-      console.error('❌ API xatosi:', err);
-      alert('Xatolik: ' + err.message);
-    }
-  };
+    );
 
+    console.log('📥 Bo‘sh xonalar:', res.data);
+
+    const roomsArray = Array.isArray(res.data.details) ? res.data.details : [];
+
+    // Xonalarni raqam bo‘yicha tartiblash
+    const sorted = roomsArray.sort((a, b) => {
+      const numA = parseInt(a.number.replace(/\D/g, ''), 10);
+      const numB = parseInt(b.number.replace(/\D/g, ''), 10);
+      return numA - numB;
+    });
+
+    setAvailableRoomsData(sorted);
+
+    if (!sorted.length) {
+      alert('Berilgan sanalarda bo‘sh xona topilmadi.');
+    }
+  } catch (err) {
+    console.error('❌ API xatosi:', err);
+    alert('Xatolik: ' + err.message);
+  }
+};
+
+  
   // 🔹 Tashkilot bo‘yicha xonalarni olish
 const fetchOrgRooms = async () => {
   if (!orgCheckIn || !orgCheckOut) {
