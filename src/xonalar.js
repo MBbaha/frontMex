@@ -38,7 +38,7 @@ function RoomDashboard() {
     };
 
     const res = await axios.get(
-      'https://mexback.onrender.com/api/rooms/getBookedRooms',
+      'https://mexback.onrender.com/api/rooms/booked',
       { params, timeout: 10000 }
     );
 
@@ -437,4 +437,5 @@ function RoomDashboard() {
 }
 
 export default RoomDashboard;
+
 
