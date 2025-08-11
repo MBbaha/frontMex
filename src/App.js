@@ -20,6 +20,49 @@ function RoomDashboard() {
   const [orgCheckOut, setOrgCheckOut] = useState('');
   const [orgRoomsData, setOrgRoomsData] = useState([]);
 
+  const [showAvailableRoomsModal, setShowAvailableRoomsModal] = useState(false);
+const [availCheckIn, setAvailCheckIn] = useState('');
+const [availCheckOut, setAvailCheckOut] = useState('');
+const [availableRoomsData, setAvailableRoomsData] = useState([]);
+
+
+    const fetchAvailableRooms = async () => {
+    if (!availCheckIn || !availCheckOut) {
+      alert('Kirish va chiqish sanalarini kiriting');
+      return;
+    }
+
+    try {
+      const res = await axios.post(
+        'https://mexback.onrender.com/api/rooms/getFreeRoom',
+        {
+          checkIn: availCheckIn,
+          checkOut: availCheckOut
+        }
+      );
+
+      console.log('📥 Bo‘sh xonalar:', res.data);
+
+      const roomsArray = Array.isArray(res.data.details) ? res.data.details : [];
+
+      // Xonalarni raqam bo‘yicha tartiblash
+      const sorted = roomsArray.sort((a, b) => {
+        const numA = parseInt(a.number.replace(/\D/g, ''), 10);
+        const numB = parseInt(b.number.replace(/\D/g, ''), 10);
+        return numA - numB;
+      });
+
+      setAvailableRoomsData(sorted);
+
+      if (!sorted.length) {
+        alert('Berilgan sanalarda bo‘sh xona topilmadi.');
+      }
+    } catch (err) {
+      console.error('❌ API xatosi:', err);
+      alert('Xatolik: ' + err.message);
+    }
+  };
+
   // 🔹 Tashkilot bo‘yicha xonalarni olish
 const fetchOrgRooms = async () => {
   if (!orgCheckIn || !orgCheckOut) {
@@ -231,6 +274,47 @@ const fetchOrgRooms = async () => {
       <button onClick={() => setShowOrgRoomsModal(true)}>
         🏢 Xonalar ro‘yxatini olish
       </button>
+<button onClick={() => setShowAvailableRoomsModal(true)}>
+  🛏 Bo‘sh xonalarni ko‘rish
+</button>
+
+
+{showAvailableRoomsModal && (
+  <div className="booking-overlay">
+    <div className="booking-form">
+      <h2>🛏 Bo‘sh xonalar</h2>
+      <input
+        type="date"
+        value={availCheckIn}
+        onChange={(e) => setAvailCheckIn(e.target.value)}
+      />
+      <input
+        type="date"
+        value={availCheckOut}
+        onChange={(e) => setAvailCheckOut(e.target.value)}
+      />
+      <button onClick={fetchAvailableRooms}>🔍 Qidirish</button>
+      <button
+        onClick={() => setShowAvailableRoomsModal(false)}
+        style={{ marginLeft: 10 }}
+      >
+        Yopish
+      </button>
+
+      {availableRoomsData.length > 0 && (
+        <div style={{ marginTop: '15px', textAlign: 'left' }}>
+          {availableRoomsData.map((room, idx) => (
+            <div key={idx} style={{ marginBottom: '10px' }}>
+              🛏 <strong>{room.number}</strong> — {room.free}
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  </div>
+)}
+
+
 
       {/* 🔹 Tashkilot bo‘yicha xonalar modal */}
       {showOrgRoomsModal && (
