@@ -33,7 +33,7 @@ const [availableRoomsData, setAvailableRoomsData] = useState([]);
     }
 
     try {
-      const res = await axios.post(
+      const res = await axios.get(
         'https://mexback.onrender.com/api/rooms/getFreeRoom',
         {
           checkIn: availCheckIn,
