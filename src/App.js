@@ -511,4 +511,4 @@ const fetchOrgRooms = async () => {
   );
 }
 
-export default RoomDashboard; ushbu kodga yozib ber
+export default RoomDashboard;
