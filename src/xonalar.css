@@ -418,3 +418,11 @@ h1 {
   border-radius: 5px;
   font-weight: bold;
 }
+.scroll-container {
+  max-height: 400px; /* maksimal balandlik */
+  overflow-y: auto;  /* pastga-tepaga aylantirish */
+  border: 1px solid #ddd;
+  padding: 10px;
+  border-radius: 6px;
+}
+
