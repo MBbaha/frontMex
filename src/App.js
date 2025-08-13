@@ -19,6 +19,8 @@ function RoomDashboard() {
   const [orgCheckIn, setOrgCheckIn] = useState('');
   const [orgCheckOut, setOrgCheckOut] = useState('');
   const [orgRoomsData, setOrgRoomsData] = useState([]);
+  const [visibleCount, setVisibleCount] = useState(10); // dastlab 10 xona chiqadi
+
 
   const [showAvailableRoomsModal, setShowAvailableRoomsModal] = useState(false);
 const [availCheckIn, setAvailCheckIn] = useState('');
@@ -305,17 +307,18 @@ const fetchOrgRooms = async () => {
         Yopish
       </button>
 
-      {availableRoomsData.length > 0 && (
-        <div style={{ marginTop: '15px', textAlign: 'left' }}>
-          {availableRoomsData.map((room, idx) => (
-            <div key={idx} style={{ marginBottom: '10px' }}>
-              🛏 <strong>{room.number}</strong> — {room.free}
-            </div>
-          ))}
-        </div>
-      )}
-    </div>
-  </div>
+     <div className="scroll-container">
+  {availableRoomsData.slice(0, visibleCount).map((room, index) => (
+    <div key={index}>{room.number}</div>
+  ))}
+
+  {availableRoomsData.length > visibleCount && (
+    <button onClick={() => setVisibleCount(prev => prev + 10)}>
+      Yana ko‘rsatish
+    </button>
+  )}
+</div>
+
 )}
 
 
