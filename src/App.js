@@ -284,7 +284,6 @@ const fetchOrgRooms = async () => {
   🛏 Bo‘sh xonalarni ko‘rish
 </button>
 
-
 {showAvailableRoomsModal && (
   <div className="booking-overlay">
     <div className="booking-form">
@@ -307,20 +306,20 @@ const fetchOrgRooms = async () => {
         Yopish
       </button>
 
-     <div className="scroll-container">
-  {availableRoomsData.slice(0, visibleCount).map((room, index) => (
-    <div key={index}>{room.number}</div>
-  ))}
+      <div className="scroll-container">
+        {availableRoomsData.slice(0, visibleCount).map((room, index) => (
+          <div key={index}>{room.number}</div>
+        ))}
 
-  {availableRoomsData.length > visibleCount && (
-    <button onClick={() => setVisibleCount(prev => prev + 10)}>
-      Yana ko‘rsatish
-    </button>
-  )}
-</div>
-
+        {availableRoomsData.length > visibleCount && (
+          <button onClick={() => setVisibleCount(prev => prev + 10)}>
+            Yana ko‘rsatish
+          </button>
+        )}
+      </div>
+    </div>
+  </div>
 )}
-
 
 
       {/* 🔹 Tashkilot bo‘yicha xonalar modal */}
